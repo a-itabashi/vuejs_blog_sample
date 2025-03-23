@@ -18,11 +18,27 @@ const props = defineProps<{
 const { roomId } = props
 const roomName = ref('')
 const messages = ref<MessageType[]>([])
+const senderName = ref('')
+const newMessageContent = ref('')
 
 const fetchMessages = async () => {
   try {
     const response = await axiosInstance.get(`rooms/${roomId}/messages`)
-    messages.value = response.data
+    roomName.value = response.data.room_name
+    messages.value = response.data.messages
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const sendMessage = async () => {
+  try {
+    const response = await axiosInstance.post(`rooms/${roomId}/messages`, {
+      content: newMessageContent.value,
+      sender_name: senderName.value,
+    })
+    newMessageContent.value = ''
+    messages.value.push(response.data)
   } catch (error) {
     console.error(error)
   }
@@ -34,7 +50,7 @@ onMounted(() => {
 </script>
 <template>
   <div>
-    <h1>チャットルーム {{ roomId }}</h1>
+    <h1>チャットルーム {{ roomName }}</h1>
 
     <ul>
       <li v-for="message in messages" :key="message.id">
@@ -42,4 +58,18 @@ onMounted(() => {
       </li>
     </ul>
   </div>
+
+  <form @submit.prevent="sendMessage">
+    <div>
+      <h3>名前</h3>
+      <input type="text" v-model="senderName" placeholder="名前を入力" required />
+    </div>
+    <div>
+      <h3>メッセージ</h3>
+      <input type="text" v-model="newMessageContent" placeholder="メッセージを入力" required />
+    </div>
+    <div>
+      <button type="submit">送信</button>
+    </div>
+  </form>
 </template>
