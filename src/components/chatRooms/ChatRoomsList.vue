@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { axiosInstance } from '@/utils/axios'
-import axios from 'axios'
 import { onMounted, ref } from 'vue'
 
 type ChatRoomType = {
@@ -10,18 +9,16 @@ type ChatRoomType = {
 
 const chatRooms = ref<ChatRoomType[]>([])
 
-const fetchChatRooms = () => {
-  axiosInstance
-    .get('rooms')
-    .then((response) => {
-      chatRooms.value = response.data
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+const fetchChatRooms = async () => {
+  try {
+    const response = await axiosInstance.get('rooms')
+    chatRooms.value = response.data
+  } catch (error) {
+    console.error(error)
+  }
 }
 
-onMounted(async () => {
+onMounted(() => {
   fetchChatRooms()
 })
 </script>
