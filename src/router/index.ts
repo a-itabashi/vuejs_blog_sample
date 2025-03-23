@@ -24,6 +24,11 @@ const router = createRouter({
       name: 'blogCreate',
       component: () => import('../views/BlogCreate.vue'),
     },
+    {
+      path: '/chatRooms',
+      name: 'chatRooms',
+      component: () => import('../views/ChatRoomList.vue'),
+    },
     // {
     //   path: '/about',
     //   name: 'about',
