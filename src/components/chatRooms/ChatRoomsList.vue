@@ -7,26 +7,15 @@ type ChatRoomType = {
   name: string
 }
 
-const chatRooms = ref<ChatRoomType[]>([])
-
-const fetchChatRooms = async () => {
-  try {
-    const response = await axiosInstance.get('rooms')
-    chatRooms.value = response.data
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-onMounted(() => {
-  fetchChatRooms()
-})
+const props = defineProps<{
+  chatRooms: ChatRoomType[]
+}>()
 </script>
 
 <template>
   <h1>VueChat - チャットルーム一覧</h1>
   <ul>
-    <li v-for="room in chatRooms" :key="room.id">
+    <li v-for="room in props.chatRooms" :key="room.id">
       <router-link :to="`/rooms/${room.id}`">{{ room.name }}</router-link>
     </li>
   </ul>
