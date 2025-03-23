@@ -29,6 +29,13 @@ const router = createRouter({
       name: 'chatRooms',
       component: () => import('../views/ChatRoomList.vue'),
     },
+
+    {
+      path: '/rooms/:id',
+      name: 'roomDetail',
+      component: () => import('../views/RoomDetail.vue'),
+      props: (route) => ({ roomId: route.params.id }),
+    },
     // {
     //   path: '/about',
     //   name: 'about',
