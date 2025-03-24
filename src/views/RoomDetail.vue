@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { axiosInstance } from '@/utils/axios'
-import { onMounted, ref, type PropType } from 'vue'
+import { onMounted, onUnmounted, ref, type PropType } from 'vue'
+// import { inject } from 'vue'
+import ActionCable, { type Channel } from 'actioncable'
+const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
 
 type MessageType = {
   id: number
@@ -20,6 +23,11 @@ const roomName = ref('')
 const messages = ref<MessageType[]>([])
 const senderName = ref('')
 const newMessageContent = ref('')
+const subscription = ref<Channel & { received(data: MessageType): void }>()
+
+// const cable = inject('cable')
+
+// console.log(cable)
 
 const fetchMessages = async () => {
   try {
@@ -44,8 +52,28 @@ const sendMessage = async () => {
   }
 }
 
+const createSubscription = () => {
+  subscription.value = cable.subscriptions.create(
+    { channel: 'RoomChannel', room_id: roomId },
+    {
+      received(data: MessageType) {
+        messages.value.push(data)
+      },
+    },
+  )
+}
+
 onMounted(() => {
   fetchMessages()
+  createSubscription()
+})
+
+onUnmounted(() => {
+  // if (subscription) {
+  // サブスクリプションを解除
+  subscription.value?.unsubscribe()
+  console.log('Subscription has been removed.')
+  // }
 })
 </script>
 <template>

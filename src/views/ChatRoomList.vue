@@ -2,7 +2,7 @@
 import { axiosInstance } from '@/utils/axios'
 import { onMounted, ref } from 'vue'
 import ChatRoomsList from '@/components/chatRooms/ChatRoomsList.vue'
-import ChatRoomForm from '@/components/chatRooms/ChaTRoomForm.vue'
+// import ChatRoomForm from '@/components/chatRooms/ChaTRoomForm.vue'
 
 type ChatRoomType = {
   id: number
